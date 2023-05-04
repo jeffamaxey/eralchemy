@@ -12,7 +12,7 @@ import argparse
 
 def set_filename_version(filename, version_number):
     with open(filename, 'w+') as f:
-        f.write("version = '{}'\n".format(version_number))
+        f.write(f"version = '{version_number}'\n")
 
 
 def set_init_version(version_str):
@@ -21,7 +21,7 @@ def set_init_version(version_str):
 
 
 def rm(filename):
-    info('Delete {}'.format(filename))
+    info(f'Delete {filename}')
     rmtree(filename, ignore_errors=True)
 
 
@@ -124,7 +124,7 @@ def main():
 
     set_init_version(next_version_str)
     make_git_commit('Bump version number to %s', next_version_str)
-    make_git_tag('v' + next_version_str)
+    make_git_tag(f'v{next_version_str}')
     build_and_upload()
 
 

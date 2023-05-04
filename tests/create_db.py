@@ -33,7 +33,7 @@ def create_db(path):
                             cascade='delete,all'))
 
     from sqlalchemy import create_engine
-    engine = create_engine('sqlite:///{}'.format(path))
+    engine = create_engine(f'sqlite:///{path}')
 
     from sqlalchemy.orm import sessionmaker
     session = sessionmaker()

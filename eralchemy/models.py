@@ -96,25 +96,18 @@ class Relation(Drawable):
 
     def __init__(self, right_col, left_col, right_cardinality=None, left_cardinality=None):
         if right_cardinality not in self.cardinalities.keys() \
-                or left_cardinality not in self.cardinalities.keys():
-            raise ValueError('Cardinality should be in {}"'.format(self.cardinalities.keys()))
+                    or left_cardinality not in self.cardinalities.keys():
+            raise ValueError(f'Cardinality should be in {self.cardinalities.keys()}"')
         self.right_col = right_col
         self.left_col = left_col
         self.right_cardinality = right_cardinality
         self.left_cardinality = left_cardinality
 
     def to_markdown(self):
-        return "{} {}--{} {}".format(
-            self.left_col,
-            self.left_cardinality,
-            self.right_cardinality,
-            self.right_col,
-        )
+        return f"{self.left_col} {self.left_cardinality}--{self.right_cardinality} {self.right_col}"
 
     def graphviz_cardinalities(self, card):
-        if card == '':
-            return ''
-        return 'label=<<FONT>{}</FONT>>'.format(self.cardinalities[card])
+        return '' if card == '' else f'label=<<FONT>{self.cardinalities[card]}</FONT>>'
 
     def to_dot(self):
         if self.right_cardinality == self.left_cardinality == '':
@@ -126,7 +119,7 @@ class Relation(Drawable):
         if self.right_cardinality != '':
             cards.append('head' +
                          self.graphviz_cardinalities(self.right_cardinality))
-        return '"{}" -- "{}" [{}];'.format(self.left_col, self.right_col, ','.join(cards))
+        return f""""{self.left_col}" -- "{self.right_col}" [{','.join(cards)}];"""
 
     def __eq__(self, other):
         if Drawable.__eq__(self, other):
@@ -157,7 +150,7 @@ class Table(Drawable):
 
     @property
     def header_markdown(self):
-        return '[{}]'.format(self.name)
+        return f'[{self.name}]'
 
     def to_markdown(self):
         return self.header_markdown + '\n' + '\n'.join(c.to_markdown() for c in self.columns)
@@ -183,6 +176,4 @@ class Table(Drawable):
         if other.name != self.name:
             return False
 
-        if self.columns_sorted != other.columns_sorted:
-            return False
-        return True
+        return self.columns_sorted == other.columns_sorted

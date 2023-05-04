@@ -65,8 +65,7 @@ def declarative_to_intermediary(base):
 
 def name_for_scalar_relationship(base, local_cls, referred_cls, constraint):
     """ Overriding naming schemes. """
-    name = referred_cls.__name__.lower() + "_ref"
-    return name
+    return f"{referred_cls.__name__.lower()}_ref"
 
 
 def database_to_intermediary(database_uri, schema=None):

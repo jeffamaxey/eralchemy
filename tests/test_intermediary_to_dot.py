@@ -69,10 +69,10 @@ def test_relation():
         '\\,headlabel\\=\\<\\<FONT\\>(?P<r_card>.+)\\<\\/FONT\\>\\>\\]\\;')
     dot = relation.to_dot()
     r = relation_re.match(dot)
-    assert r.group('l_name') == 'child'
-    assert r.group('r_name') == 'parent'
-    assert r.group('l_card') == '{0,1}'
-    assert r.group('r_card') == '0..N'
+    assert r['l_name'] == 'child'
+    assert r['r_name'] == 'parent'
+    assert r['l_card'] == '{0,1}'
+    assert r['r_card'] == '0..N'
 
 
 def assert_table_well_rendered_to_dot(table):

@@ -26,7 +26,7 @@ def cli():
     args = parser.parse_args()
     check_args(args)
     if args.v:
-        print('ERAlchemy version {}.'.format(__version__))
+        print(f'ERAlchemy version {__version__}.')
         exit(0)
     render_er(
         args.i,
@@ -79,14 +79,14 @@ def _intermediary_to_markdown(tables, relationships):
     """ Returns the er markup source in a string. """
     t = '\n'.join(t.to_markdown() for t in tables)
     r = '\n'.join(r.to_markdown() for r in relationships)
-    return '{}\n{}'.format(t, r)
+    return f'{t}\n{r}'
 
 
 def _intermediary_to_dot(tables, relationships):
     """ Returns the dot source representing the database in a string. """
     t = '\n'.join(t.to_dot() for t in tables)
     r = '\n'.join(r.to_dot() for r in relationships)
-    return '{}\n{}\n{}\n}}'.format(GRAPH_BEGINNING, t, r)
+    return f'{GRAPH_BEGINNING}\n{t}\n{r}\n}}'
 
 
 # Routes from the class name to the function transforming this class in
@@ -132,14 +132,17 @@ def all_to_intermediary(filename_or_input, schema=None):
         pass
 
     # try to read markdown file.
-    if isinstance(filename_or_input, basestring):
-        if filename_or_input.split('.')[-1] == 'er':
-            return markdown_file_to_intermediary(filename_or_input)
+    if (
+        isinstance(filename_or_input, basestring)
+        and filename_or_input.split('.')[-1] == 'er'
+    ):
+        return markdown_file_to_intermediary(filename_or_input)
 
     # try to read a markdown in a string
-    if not isinstance(filename_or_input, basestring):
-        if all(isinstance(e, basestring) for e in filename_or_input):
-            return line_iterator_to_intermediary(filename_or_input)
+    if not isinstance(filename_or_input, basestring) and all(
+        isinstance(e, basestring) for e in filename_or_input
+    ):
+        return line_iterator_to_intermediary(filename_or_input)
 
     # try to read DB URI.
     try:
@@ -148,7 +151,7 @@ def all_to_intermediary(filename_or_input, schema=None):
     except ArgumentError:
         pass
 
-    msg = 'Cannot process filename_or_input {}'.format(input_class_name)
+    msg = f'Cannot process filename_or_input {input_class_name}'
     raise ValueError(msg)
 
 
@@ -189,8 +192,8 @@ def filter_resources(tables, relationships,
 
     include_tables = include_tables or [t.name for t in _tables]
     include_columns = include_columns or [c.name for t in _tables for c in t.columns]
-    exclude_tables = exclude_tables or list()
-    exclude_columns = exclude_columns or list()
+    exclude_tables = exclude_tables or []
+    exclude_columns = exclude_columns or []
 
     _tables = [t for t in _tables if t.name not in exclude_tables and t.name in include_tables]
     _relationships = [r for r in _relationships

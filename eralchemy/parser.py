@@ -14,7 +14,7 @@ class ParsingException(Exception):
             error=self.args[0],
         )
         if self.hint is not None:
-            rv += '\nHINT: {}'.format(self.hint)
+            rv += f'\nHINT: {self.hint}'
         return rv
 
 
@@ -35,9 +35,7 @@ class NoCurrentTableException(ParsingException):
 
 
 def remove_comments_from_line(line):
-    if '#' not in line:
-        return line.strip()
-    return line[:line.index('#')].strip()
+    return line.strip() if '#' not in line else line[:line.index('#')].strip()
 
 
 def filter_lines_from_comments(lines):
@@ -51,8 +49,7 @@ def filter_lines_from_comments(lines):
 
 def parse_line(line):
     for typ in [Table, Relation, Column]:
-        match = typ.RE.match(line)
-        if match:
+        if match := typ.RE.match(line):
             return typ.make_from_match(match)
     msg = 'Line "{}" could not be parsed to an object.'
     raise ValueError(msg.format(line))
@@ -137,7 +134,7 @@ def line_iterator_to_intermediary(line_iterator):
             e.line_nb = line_nb
             e.line = raw_line
             errors.append(e)
-    if len(errors) != 0:
-        msg = 'ERAlchemy couldn\'t complete the generation due the {} following errors'.format(len(errors))
+    if errors:
+        msg = f"ERAlchemy couldn\'t complete the generation due the {len(errors)} following errors"
         raise ParsingException(msg + '\n\n'.join(e.traceback for e in errors))
     return tables, relations
